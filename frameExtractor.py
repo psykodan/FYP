@@ -2,13 +2,13 @@ import cv2
 import os
 
 
-DIR = '/home/daniel/Documents/FYP/data/'
+DIR = '/home/daniel/Documents/FYP/FYP/data/ClearLightChopDoolin/'
 for subdir, dirs, files in os.walk(DIR):
 	for file in files:
 		#print os.path.join(subdir, file)
 		filepath = subdir + os.sep + file
 
-		if file.startswith("neg") & file.endswith(".MOV"): #will add further file extensions if they are used
+		if file.startswith("neg"):
 			print (filepath)
 			vidcap = cv2.VideoCapture(filepath)
 
@@ -24,12 +24,15 @@ for subdir, dirs, files in os.walk(DIR):
 			while success:
 				success,image = vidcap.read()
 				#print('Read a new frame: ', success)
-				cv2.imwrite(folder + os.sep+ "frame%d.jpg" % count, image)     # save frame as JPEG file
-				count += 1
-		
+				#Convert image to Grayscale
+				if(success == True):
+					gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+					cv2.imwrite(folder + os.sep+ "frame%d.jpg" % count, gray)     # save frame as JPEG file
+					count += 1
+			
 		
 
-		elif file.startswith("pos") & file.endswith(".MOV"): #will add further file extensions if they are used
+		elif file.startswith("pos"):
 			print (filepath)
 			vidcap = cv2.VideoCapture(filepath)
 
@@ -45,6 +48,9 @@ for subdir, dirs, files in os.walk(DIR):
 			while success:
 				success,image = vidcap.read()
 				#print('Read a new frame: ', success)
-				cv2.imwrite(folder + os.sep+ "frame%d.jpg" % count, image)     # save frame as JPEG file
-				count += 1
+				#Convert image to Grayscale
+				if(success == True):
+					gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+					cv2.imwrite(folder + os.sep+ "frame%d.jpg" % count, gray)     # save frame as JPEG file
+					count += 1
 

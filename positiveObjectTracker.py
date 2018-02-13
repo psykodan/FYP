@@ -20,19 +20,20 @@ while(processed == False):
 	dirFiles.sort(key=lambda f: int(''.join(filter(str.isdigit, f))))
 	img = cv2.imread(DIR + dirFiles[0],cv2.IMREAD_GRAYSCALE)
 	cv2.imshow('image',img)
+	cv2.setMouseCallback('image',mouse_pos)
 	
 	if cv2.waitKey(1) & 0xFF == ord('s'):
 		for file in dirFiles:
 			img = cv2.imread(DIR + file,cv2.IMREAD_GRAYSCALE)
 			#print(file)
 			
-			cv2.rectangle(img,(ix-100,iy-100),(ix+100,iy+100),(255,0,0),10)
+			cv2.rectangle(img,(ix-25,iy-25),(ix+25,iy+25),(255,0,0),5)
 			cv2.namedWindow('image')
 			cv2.setMouseCallback('image',mouse_pos)
 			cv2.imshow('image',img)
-			cv2.waitKey(1)
+			cv2.waitKey(50)
 
-			line = 'haar/positive/'+file+' 1 ' + str(ix-100) + ' ' + str(iy-100) + ' ' + str(ix+100) + ' ' + str(iy+100) + '\n'
+			line = 'positive/'+file+' 1 ' + str(ix-25) + ' ' + str(iy-25) + ' ' + str(ix+25) + ' ' + str(iy+25) + '\n'
 			with open('info.dat','a') as f:
 				f.write(line)
 

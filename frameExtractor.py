@@ -2,7 +2,7 @@ import cv2
 import os
 
 
-DIR = '/home/daniel/Documents/FYP/FYP/data/ClearLightChopDoolin/'
+DIR = '/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/holdout'
 for subdir, dirs, files in os.walk(DIR):
 	for file in files:
 		#print os.path.join(subdir, file)
@@ -13,11 +13,11 @@ for subdir, dirs, files in os.walk(DIR):
 			vidcap = cv2.VideoCapture(filepath)
 
 			#Create negative image directory
-			if not os.path.exists(subdir + os.sep + 'negative images'):
-				os.makedirs(subdir + os.sep + 'negative images')
+			if not os.path.exists(subdir + os.sep + 'negative'):
+				os.makedirs(subdir + os.sep + 'negative')
 
 			#Name the image by number
-			folder = subdir + os.sep + 'negative images'
+			folder = subdir + os.sep + 'negative'
 			count = len([name for name in os.listdir(folder) if os.path.isfile(os.path.join(folder, name))])
 			success = True
 
@@ -37,11 +37,11 @@ for subdir, dirs, files in os.walk(DIR):
 			vidcap = cv2.VideoCapture(filepath)
 
 			#Create positive image directory
-			if not os.path.exists(subdir + os.sep + 'positive images'):
-				os.makedirs(subdir + os.sep + 'positive images')
+			if not os.path.exists(subdir + os.sep + 'positive'):
+				os.makedirs(subdir + os.sep + 'positive')
 
 			#Name the image by number
-			folder = subdir + os.sep + 'positive images'
+			folder = subdir + os.sep + 'positive'
 			count = len([name for name in os.listdir(folder) if os.path.isfile(os.path.join(folder, name))])
 			success = True
 

@@ -3,7 +3,8 @@ import numpy as np
 import os
 
 processed = False
-DIR ="/home/daniel/Documents/FYP/FYP/haar/positive/"
+#DIR ="/home/daniel/Documents/FYP/FYP/haar/positive/"
+DIR = "/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/holdout/positive/"
 ix,iy = -1,-1
 
 while(processed == False):

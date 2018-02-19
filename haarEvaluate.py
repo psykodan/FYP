@@ -3,9 +3,9 @@ import cv2
 import os
 
 #this is the cascade we just made. Call what you want
-body_cascade = cv2.CascadeClassifier('/home/daniel/Documents/FYP/FYP/haar/try1/cascade.xml')
+body_cascade = cv2.CascadeClassifier('/home/daniel/Documents/FYP/FYP/haar/try2/cascade.xml')
 processed = False
-DIR ="/home/daniel/Documents/FYP/FYP/haar/positive/"
+DIR ="/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/holdout/positive/"
 
 
 #Sort files in numerical order
@@ -20,10 +20,12 @@ while(processed == False):
 
 	if cv2.waitKey(1) & 0xFF == ord('s'):
 		for file in dirFiles:
-			img = cv2.imread(DIR + file,cv2.IMREAD_GRAYSCALE)
+			img = cv2.imread(DIR + file)
+			gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 			# image, reject levels level weights.
-			bodies = body_cascade.detectMultiScale(img, scaleFactor=1.1, minNeighbors=5, minSize=(50,50), maxSize=(100,100))
-			
+			#bodies = body_cascade.detectMultiScale(img, scaleFactor=1.1, minNeighbors=5, minSize=(50,50), maxSize=(100,100))
+			bodies = body_cascade.detectMultiScale(gray, 400, 100)
+
 			# add this
 			for (x,y,w,h) in bodies:
 				cv2.rectangle(img,(x,y),(x+w,y+h),(255,255,0),2)
@@ -55,7 +57,7 @@ r = open('results.txt', 'r')
 results = r.read()
 r.close()
 
-d = open('/home/daniel/Documents/FYP/FYP/haar/try1/info.dat', 'r')
+d = open('/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/holdout/info.dat', 'r')
 data = d.read()
 d.close()
 
@@ -75,17 +77,70 @@ for x in dataFormatted:
 	if(len(x) != 1):
 		for y in resFormatted:
 			if(y[0] == x[0]):
-				if(int(y[-4]) >= (int(x[-4]) - 50) and int(y[-4]) <= (int(x[-4]) + 50) ):
-					line = 'MATCH\n'
-					with open('check.txt','a') as f:
-						f.write(line)
-						f.close()
+				if(int(x[1])==1):
+					#Check x y coords of box are within 50 pixels for 1 object	
+					if((int(y[1]) >= (int(x[2]) - 50) and int(y[1]) <= (int(x[2]) + 50)) and  (int(y[2]) >= (int(x[3]) - 50) and int(y[2]) <= (int(x[3]) + 50))):
+						line = 'FOUND object 1\n'
+						with open('check.txt','a') as f:
+							f.write(line)
+							f.close()
+
+					else:
+						line = 'FAIL\n'
+						with open('check.txt','a') as f:
+							f.write(line)
+							f.close()	
+				elif(int(x[1])==2):
+				
+					#Check x y coords of box are within 50 pixels for 1 object	
+					if((int(y[1]) >= (int(x[2]) - 50) and int(y[1]) <= (int(x[2]) + 50)) and  (int(y[2]) >= (int(x[3]) - 50) and int(y[2]) <= (int(x[3]) + 50))):
+						line = 'FOUND object 1\n'
+						with open('check.txt','a') as f:
+							f.write(line)
+							f.close()
+
+					#Check x y coords of box are within 50 pixels for 1 object	
+					elif((int(y[1]) >= (int(x[6]) - 50) and int(y[1]) <= (int(x[6]) + 50)) and  (int(y[2]) >= (int(x[7]) - 50) and int(y[2]) <= (int(x[7]) + 50))):
+						line = 'FOUND object 2\n'
+						with open('check.txt','a') as f:
+							f.write(line)
+							f.close()
+
+					else:
+						line = 'FAIL\n'
+						with open('check.txt','a') as f:
+							f.write(line)
+							f.close()
+
+				elif(int(x[1])==3):
+
+					#Check x y coords of box are within 50 pixels for 1 object	
+					if((int(y[1]) >= (int(x[2]) - 50) and int(y[1]) <= (int(x[2]) + 50)) and  (int(y[2]) >= (int(x[3]) - 50) and int(y[2]) <= (int(x[3]) + 50))):
+						line = 'FOUND object 1\n'
+						with open('check.txt','a') as f:
+							f.write(line)
+							f.close()
+					
+					#Check x y coords of box are within 50 pixels for 1 object	
+					elif((int(y[1]) >= (int(x[6]) - 50) and int(y[1]) <= (int(x[6]) + 50)) and  (int(y[2]) >= (int(x[7]) - 50) and int(y[2]) <= (int(x[7]) + 50))):
+						line = 'FOUND object 2\n'
+						with open('check.txt','a') as f:
+							f.write(line)
+							f.close()
+
+					#Check x y coords of box are within 50 pixels for 1 object	
+					elif((int(y[1]) >= (int(x[10]) - 50) and int(y[1]) <= (int(x[10]) + 50)) and  (int(y[2]) >= (int(x[11]) - 50) and int(y[2]) <= (int(x[11]) + 50))):
+						line = 'FOUND object 3\n'
+						with open('check.txt','a') as f:
+							f.write(line)
+							f.close()
+
+					else:
+						line = 'FAIL\n'
+						with open('check.txt','a') as f:
+							f.write(line)
+							f.close()
 
 				else:
-					line = 'FAIL\n'
-					with open('check.txt','a') as f:
-						f.write(line)
-						f.close()	
-
-
+					print("no objects here")
 

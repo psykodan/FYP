@@ -5,7 +5,7 @@ import os
 #this is the cascade we just made. Call what you want
 body_cascade = cv2.CascadeClassifier('/home/daniel/Documents/FYP/FYP/haar/try2/cascade.xml')
 processed = False
-DIR ="/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/holdout/positive/"
+DIR ="/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/holdout/1/positive/"
 
 
 #Sort files in numerical order
@@ -57,7 +57,7 @@ r = open('results.txt', 'r')
 results = r.read()
 r.close()
 
-d = open('/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/holdout/info.dat', 'r')
+d = open('/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/holdout/1/info.dat', 'r')
 data = d.read()
 d.close()
 

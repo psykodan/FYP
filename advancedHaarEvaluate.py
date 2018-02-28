@@ -3,7 +3,7 @@ import cv2
 import os
 import matplotlib.pyplot as plt
 
-from haarDetect import haarDetectionImageStream
+from advancedHaarDetect import advancedHaarDetectionImageStream
 
 
 def main():
@@ -18,37 +18,41 @@ def main():
 	assert os.path.exists(haar), "Error: File does not exist at: , "+str(haar)
 	cascade = cv2.CascadeClassifier(haar)
 
-	info = str(input("Enter info.dat file: ") or '/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/holdout/3/info.dat')
-	#threshold = int(input("Enter a threshold value of Haar cascade classification confidence: ") or 0)
+	threshold = float(input("Enter a threshold value of Haar cascade classification confidence: ") or 4.6)
 	
-	for i in range(51):
-		threshold = i * 0.1
-		haarDetectionImageStream(DIR, cascade, threshold)
+	info = str(input("Enter info.dat file: ") or '/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/holdout/3/info.dat')
+
+	for i in range(0, 101, 5):
+		box = i
+		advancedHaarDetectionImageStream(DIR, cascade, threshold, box)
 		results = processResults(info)
-		plotPoints.append([results, threshold])
+		plotPoints.append([results[0],results[1], box])
+		print(plotPoints)
 		print(i)
 	
 		#print(plotPoints)
 
 	x=[]
 	y=[]
-	
+	b=[]
 	for p in plotPoints:
 		x.append(p[1])
 		y.append(p[0])
+		b.append(p[2])
 		
 	print(x)
 	print(y)
+	print(b)
 	plt.plot(x,y)
-	plt.title("Accuracy at given threshold value in haarDetect")
-	plt.xlabel("Threshold")
+	plt.title("Accuracy over TPR for varying box size of advancedHaarDetect")
+	plt.xlabel("True Positive Rate")
 	plt.ylabel("Accuracy")
 	plt.show()
 
-	r = open('ACC.txt',"a")
-	r.write("Threshold        Accuracy\n")
+	r = open('BOX.txt',"a")
+	r.write("TPR        Accuracy          Box\n")
 	for j in range(len(x)):
-		r.write(str(x[j]) + " " + str(y[j]) + "\n")
+		r.write(str(x[j]) + " " + str(y[j]) + " " + str(b[j]) +"\n")
 	r.close()
 
 def processResults(info):
@@ -210,11 +214,17 @@ def processResults(info):
 	print("Positive count: "+ str(p))
 	print("Negative count: "+ str(n))
 
-	if(tp != 0 and fp != 0 and p != 0 and n != 0):
+	if(tp != 0  and p != 0):
 		TPR = tp / p
-		FPR = fp / n
+		
 	else:
 		TPR = 0
+		
+	if(fp != 0 and n != 0):
+		
+		FPR = fp / n
+	else:
+		
 		FPR = 0
 	#print(TPR)
 	#print(FPR)
@@ -236,6 +246,6 @@ def processResults(info):
 	r.write("")
 	r.close()
 
-	return accuracy
+	return accuracy, TPR
 
 main()

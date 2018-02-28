@@ -37,9 +37,9 @@ def frameExtraction(dirIn, dirOut):
 		
 		if(success == True):
 			#Convert image to Grayscale for image processing reasons
-			gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+			#gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 			# save frame as JPEG file
-			cv2.imwrite(dirOut + os.sep+ "frame%d.jpg" % count, gray)     
+			cv2.imwrite(dirOut + os.sep+ "frame%d.jpg" % count, image)     
 			count += 1
 			
 main()

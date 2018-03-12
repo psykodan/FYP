@@ -118,4 +118,4 @@ def haarDetectionImageStream(dirIn, cascade, threshold):
 	cv2.destroyAllWindows()
 
 
-#main()
+main()

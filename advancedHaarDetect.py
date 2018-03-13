@@ -26,6 +26,7 @@ def advancedHaarDetection(inputFile, cascade, threshold, box):
 
 	#feed = "/home/daniel/Documents/FYP/FYP/data/ClearLightChopDoolin/positive/posClearLightChopDoolin2"
 	oldRects = []
+
 	feed = inputFile
 	cap = cv2.VideoCapture(feed)
 	if not cap.isOpened():
@@ -50,18 +51,18 @@ def advancedHaarDetection(inputFile, cascade, threshold, box):
 						for(x,y,w,h) in oldRects:
 							if(rects[a][0] <= x+box and rects[a][0] >= x-box and rects[a][1] <= y+box and rects[a][1] >= y-box):
 								cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,255,255),2)
-								
 								break
 
 						else:
 							cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,0,255),2)
+
 
 			cv2.imshow('img',img)
 			if cv2.waitKey(1) & 0xFF == ord('q'):
 				break
 		
 			oldRects = rects
-
+			
 
 		cap.release()
 		cv2.destroyAllWindows()

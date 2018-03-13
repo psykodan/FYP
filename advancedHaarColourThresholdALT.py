@@ -18,11 +18,11 @@ def main():
 
 	box = int(input("Enter a value for the width of a box for memory check: ") or 40)
 	
-	advancedHaarDetectionColourThreshold(DIR, cascade, threshold, box)
+	advancedHaarDetectionColourThresholdALT(DIR, cascade, threshold, box)
 
 
 
-def advancedHaarDetectionColourThreshold(inputFile, cascade, threshold, box):
+def advancedHaarDetectionColourThresholdALT(inputFile, cascade, threshold, box):
 
 	#feed = "/home/daniel/Documents/FYP/FYP/data/ClearLightChopDoolin/positive/posClearLightChopDoolin2"
 	oldRects = []
@@ -53,36 +53,36 @@ def advancedHaarDetectionColourThreshold(inputFile, cascade, threshold, box):
 			
 			for a in range(len(weights)):
 				if(weights[a][0] >= threshold):
-					if(len(oldRects)>0):
-						for(x,y,w,h) in oldRects:
-							if(rects[a][0] <= x+box and rects[a][0] >= x-box and rects[a][1] <= y+box and rects[a][1] >= y-box):
-								#cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,255,255),2)
-								roi_hsv = hsv[int(rects[a][1]):int(rects[a][1])+box, int(rects[a][0]):int(rects[a][0])+box]
-								# Threshold the HSV image to get only dark colors
-								mask = cv2.inRange(roi_hsv, lower, upper)
-								
+					
+					#cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,255,255),2)
+					roi_hsv = hsv[int(rects[a][1]):int(rects[a][1])+box, int(rects[a][0]):int(rects[a][0])+box]
+					# Threshold the HSV image to get only dark colors
+					mask = cv2.inRange(roi_hsv, lower, upper)
+					
 
-								# Bitwise-AND mask and original image
-								#mask = cv2.bitwise_not(mask)
-								#res = cv2.bitwise_and(img,img, mask= mask)
-						
-								opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-								closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
-								res = cv2.bitwise_and(roi_hsv,roi_hsv, mask= closing)
-								HSV2BGR = cv2.cvtColor(res, cv2.COLOR_HSV2BGR)
-								gray_res = cv2.cvtColor(HSV2BGR, cv2.COLOR_BGR2GRAY)
+					# Bitwise-AND mask and original image
+					#mask = cv2.bitwise_not(mask)
+					#res = cv2.bitwise_and(img,img, mask= mask)
+			
+					opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+					closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
+					res = cv2.bitwise_and(roi_hsv,roi_hsv, mask= closing)
+					HSV2BGR = cv2.cvtColor(res, cv2.COLOR_HSV2BGR)
+					gray_res = cv2.cvtColor(HSV2BGR, cv2.COLOR_BGR2GRAY)
 
-						
-								if(gray_res[int(len(gray_res)/2)][int(len(gray_res[0])/2)] != 0):
+			
+					if(gray_res[int(len(gray_res)/2)][int(len(gray_res[0])/2)] != 0):
+						if(len(oldRects)>0):
+							for(x,y,w,h) in oldRects:
+								if(rects[a][0] <= x+box and rects[a][0] >= x-box and rects[a][1] <= y+box and rects[a][1] >= y-box):
 									cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,255,255),2)
-								#cv2.imshow("Frame", edges)
-								#cv2.imshow('mask',roi_gray)
-								break
+					
+									break
 
-						else:
-							#cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,0,255),2)
-							#roi_gray=gray
-							dummy=1
+							else:
+								#cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,0,255),2)
+								#roi_gray=gray
+								dummy=1
 
 
 			#cv2.imshow('mask',roi_gray)
@@ -101,7 +101,7 @@ def advancedHaarDetectionColourThreshold(inputFile, cascade, threshold, box):
 
 
 
-def advancedHaarDetectionColourThresholdImageStream(dirIn, cascade, threshold, box):
+def advancedHaarDetectionColourThresholdImageStreamALT(dirIn, cascade, threshold, box):
 
 	#Sort files in numerical order
 	dirFiles = os.listdir(dirIn)
@@ -130,41 +130,43 @@ def advancedHaarDetectionColourThresholdImageStream(dirIn, cascade, threshold, b
 			neighbours = bodies[1]
 			weights = bodies[2]
 
-
-			
 			for a in range(len(weights)):
 				if(weights[a][0] >= threshold):
-					if(len(oldRects)>0):
-						for(x,y,w,h) in oldRects:
-							if(rects[a][0] <= x+box and rects[a][0] >= x-box and rects[a][1] <= y+box and rects[a][1] >= y-box):
-								roi_hsv = hsv[int(rects[a][1]):int(rects[a][1])+box, int(rects[a][0]):int(rects[a][0])+box]
-								# Threshold the HSV image to get only dark colors
-								mask = cv2.inRange(roi_hsv, lower, upper)
-								
+					
+					#cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,255,255),2)
+					roi_hsv = hsv[int(rects[a][1]):int(rects[a][1])+box, int(rects[a][0]):int(rects[a][0])+box]
+					# Threshold the HSV image to get only dark colors
+					mask = cv2.inRange(roi_hsv, lower, upper)
+					
 
-								# Bitwise-AND mask and original image
-								#mask = cv2.bitwise_not(mask)
-								#res = cv2.bitwise_and(img,img, mask= mask)
-						
-								opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-								closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
-								res = cv2.bitwise_and(roi_hsv,roi_hsv, mask= closing)
-								HSV2BGR = cv2.cvtColor(res, cv2.COLOR_HSV2BGR)
-								gray_res = cv2.cvtColor(HSV2BGR, cv2.COLOR_BGR2GRAY)
+					# Bitwise-AND mask and original image
+					#mask = cv2.bitwise_not(mask)
+					#res = cv2.bitwise_and(img,img, mask= mask)
+			
+					opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+					closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
+					res = cv2.bitwise_and(roi_hsv,roi_hsv, mask= closing)
+					HSV2BGR = cv2.cvtColor(res, cv2.COLOR_HSV2BGR)
+					gray_res = cv2.cvtColor(HSV2BGR, cv2.COLOR_BGR2GRAY)
 
-
-								if(gray_res[int(len(gray_res)/2)][int(len(gray_res[0])/2)] != 0):
-									#cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,255,255),2)
+			
+					if(gray_res[int(len(gray_res)/2)][int(len(gray_res[0])/2)] != 0):
+						if(len(oldRects)>0):
+							for(x,y,w,h) in oldRects:
+								if(rects[a][0] <= x+box and rects[a][0] >= x-box and rects[a][1] <= y+box and rects[a][1] >= y-box):
 									detect=True
 									line = 'positive/'+file + ' ' + str(rects[a][0]) + ' ' + str(rects[a][1]) + ' ' + str(rects[a][0]+rects[a][2]) + ' ' + str(rects[a][1]+rects[a][3]) + '\n'
 									with open('results.txt','a') as f:
 										f.write(line)
 										f.close()
-								break
+					
+									break
 
-						else:
-							#cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,0,255),2)
-							dummy = 1
+							else:
+								#cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,0,255),2)
+								#roi_gray=gray
+								dummy=1
+									
 
 
 			if(detect == False):

@@ -5,7 +5,7 @@ import os
 
 def main():
 	
-	DIR = str(input("Enter path to video file for Haar detection: ") or "/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/positive/posCloudyChopSurfFanore7")
+	DIR = str(input("Enter path to video file for Haar detection: ") or "/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/positive/posCloudyChopSurfFanore3")
 	assert os.path.exists(DIR), "Error: Path does not exist at: , "+str(DIR)
 
 
@@ -61,14 +61,19 @@ def advancedHaarDetectionColourThreshold(inputFile, cascade, threshold, box):
 								# Threshold the HSV image to get only dark colors
 								mask = cv2.inRange(roi_hsv, lower, upper)
 								
+								#opening
+								erosion1 = cv2.erode(mask,kernel,iterations = 1)
+								dilation1 = cv2.dilate(erosion1,kernel,iterations = 1)
 
-								# Bitwise-AND mask and original image
-								#mask = cv2.bitwise_not(mask)
-								#res = cv2.bitwise_and(img,img, mask= mask)
-						
-								opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-								closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
-								res = cv2.bitwise_and(roi_hsv,roi_hsv, mask= closing)
+								#closing
+								dilation2 = cv2.dilate(dilation1,kernel,iterations = 1)
+								erosion2 = cv2.erode(dilation2,kernel,iterations = 1)
+
+								#opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+								#closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
+
+
+								res = cv2.bitwise_and(roi_hsv,roi_hsv, mask= erosion2)
 								HSV2BGR = cv2.cvtColor(res, cv2.COLOR_HSV2BGR)
 								gray_res = cv2.cvtColor(HSV2BGR, cv2.COLOR_BGR2GRAY)
 
@@ -142,13 +147,19 @@ def advancedHaarDetectionColourThresholdImageStream(dirIn, cascade, threshold, b
 								mask = cv2.inRange(roi_hsv, lower, upper)
 								
 
-								# Bitwise-AND mask and original image
-								#mask = cv2.bitwise_not(mask)
-								#res = cv2.bitwise_and(img,img, mask= mask)
-						
-								opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-								closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
-								res = cv2.bitwise_and(roi_hsv,roi_hsv, mask= closing)
+								#opening
+								erosion1 = cv2.erode(mask,kernel,iterations = 1)
+								dilation1 = cv2.dilate(erosion1,kernel,iterations = 1)
+
+								#closing
+								dilation2 = cv2.dilate(dilation1,kernel,iterations = 1)
+								erosion2 = cv2.erode(dilation2,kernel,iterations = 1)
+
+								#opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+								#closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
+
+
+								res = cv2.bitwise_and(roi_hsv,roi_hsv, mask= erosion2)
 								HSV2BGR = cv2.cvtColor(res, cv2.COLOR_HSV2BGR)
 								gray_res = cv2.cvtColor(HSV2BGR, cv2.COLOR_BGR2GRAY)
 
@@ -191,4 +202,4 @@ def advancedHaarDetectionColourThresholdImageStream(dirIn, cascade, threshold, b
 	cv2.destroyAllWindows()
 
 
-#main()
+main()

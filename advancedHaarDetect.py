@@ -14,9 +14,9 @@ def main():
 	assert os.path.exists(haar), "Error: File does not exist at: , "+str(haar)
 	cascade = cv2.CascadeClassifier(haar)
 
-	threshold = float(input("Enter a threshold value of Haar cascade classification confidence: ") or 4.6)
+	threshold = float(input("Enter a threshold value of Haar cascade classification confidence: ") or 3.6)
 
-	box = float(input("Enter a value for the width of a box for memory check: ") or 50)
+	box = float(input("Enter a value for the width of a box for memory check: ") or 40)
 	
 	advancedHaarDetection(DIR, cascade, threshold, box)
 
@@ -140,4 +140,4 @@ def advancedHaarDetectionImageStream(dirIn, cascade, threshold, box):
 	cv2.destroyAllWindows()
 
 
-#main()
+main()

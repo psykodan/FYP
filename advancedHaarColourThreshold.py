@@ -5,18 +5,21 @@ import os
 
 def main():
 	
-	DIR = str(input("Enter path to video file for Haar detection: ") or "/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/positive/posCloudyChopSurfFanore3")
-	assert os.path.exists(DIR), "Error: Path does not exist at: , "+str(DIR)
+	DIR = str(input("Enter path to video file for Haar detection or the number id of input device: "))
+	if(DIR.isdigit):
+		DIR = int(DIR)
+	else:
+		assert os.path.exists(DIR), "Error: Path does not exist at: , "+str(DIR)
 
 
 	#cascade = cv2.CascadeClassifier('/home/daniel/Documents/FYP/FYP/haar/final/cascade.xml')
-	haar = str(input("Enter path to Haar cascade classifier xml file: ") or '/home/daniel/Documents/FYP/FYP/haar/final/cascade.xml')
+	haar = str(input("Enter path to Haar cascade classifier xml file: "))
 	assert os.path.exists(haar), "Error: File does not exist at: , "+str(haar)
 	cascade = cv2.CascadeClassifier(haar)
 
-	threshold = float(input("Enter a threshold value of Haar cascade classification confidence: ") or 3.6)
+	threshold = float(input("Enter a threshold value of Haar cascade classification confidence: "))
 
-	box = int(input("Enter a value for the width of a box for memory check: ") or 40)
+	box = int(input("Enter a value for the width of a box for memory check: "))
 	
 	advancedHaarDetectionColourThreshold(DIR, cascade, threshold, box)
 

@@ -5,15 +5,15 @@ import os
 
 def main():
 	
-	DIR = str(input("Enter path to video file for Haar detection or the number id of input device: "))
-	if(DIR.isdigit):
+	DIR = str(input("Enter path to video file for Haar detection: ") or "/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/positive/posCloudyChopSurfFanore7")
+	if(DIR.isdigit()):
 		DIR = int(DIR)
 	else:
 		assert os.path.exists(DIR), "Error: Path does not exist at: , "+str(DIR)
 
 
 	#cascade = cv2.CascadeClassifier('/home/daniel/Documents/FYP/FYP/haar/final/cascade.xml')
-	haar = str(input("Enter path to Haar cascade classifier xml file: "))
+	haar = str(input("Enter path to Haar cascade classifier xml file: ") or '/home/daniel/Documents/FYP/FYP/haar/final/cascade.xml')
 	assert os.path.exists(haar), "Error: File does not exist at: , "+str(haar)
 	cascade = cv2.CascadeClassifier(haar)
 

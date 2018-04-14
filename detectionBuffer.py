@@ -140,4 +140,4 @@ def advancedHaarDetectionImageStream(dirIn, cascade, threshold, box):
 	cv2.destroyAllWindows()
 
 
-main()
+#main()

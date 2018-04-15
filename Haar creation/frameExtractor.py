@@ -7,9 +7,9 @@ import sys
 
 def main():	#User input file and output location
 
-	DIR = input("Enter path to video file for frame extration: ")
+	DIR = str(input("Enter path to video file for frame extration: ") or "demoVideos/pos")
 	assert os.path.exists(DIR), "Error: Path does not exist at: , "+str(DIR)
-	DIR2 = input("Enter path to store frames: ")
+	DIR2 = str(input("Enter path to store frames: ") or "demoImages/pos/")
 	if not os.path.exists(DIR2):
 		check = input("Create directory " + DIR2 + " ? (Y/n): ")
 		if(check == "Y" or check == "y" or check == ""):

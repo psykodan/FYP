@@ -3,7 +3,7 @@ import cv2
 import os
 
 
-from advancedHaarDetect2 import advancedHaarDetectionImageStream
+from advancedHaarDetect import haarDetectionWithBufferImageStream
 
 
 def main():
@@ -28,7 +28,7 @@ def main():
 	for hSetNum in range(len(holdoutSets)):
 		for i in range(0, 101, 5):
 			box = i
-			advancedHaarDetectionImageStream(holdoutSets[hSetNum], cascade, threshold, box)
+			haarDetectionWithBufferImageStream(holdoutSets[hSetNum], cascade, threshold, box)
 			processResults(objectLocations[hSetNum], box, holdoutSets[hSetNum])
 			print(i)
 
@@ -180,6 +180,10 @@ def processResults(info, box, dirIn):
 	print("False negative count: "+ str(fn))
 	print("Positive count: "+ str(p))
 	print("Negative count: "+ str(n))
+
+
+
+	#Writing results to file
 
 	rF = open('resultsFull.txt', 'a')
 	rF.write("Confusion Matrix for Memory box size: " + str(box) + "x" +str(box)+ "\n")

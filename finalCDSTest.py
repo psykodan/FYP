@@ -3,7 +3,7 @@ import cv2
 import os
 
 
-from advancedHaarColourThreshold import advancedHaarDetectionColourThresholdImageStream
+from advancedHaarColourThreshold import casualtyDetectionImageStream
 
 
 def main():
@@ -27,7 +27,7 @@ def main():
 	box = 40
 	#Iterate through confidence thresholds 0 - 5
 	for hSetNum in range(len(holdoutSets)):
-		advancedHaarDetectionColourThresholdImageStream(holdoutSets[hSetNum], cascade, threshold, box)
+		casualtyDetectionImageStream(holdoutSets[hSetNum], cascade, threshold, box)
 		processResults(objectLocations[hSetNum], holdoutSets[hSetNum])
 		
 
@@ -179,6 +179,10 @@ def processResults(info, dirIn):
 	print("False negative count: "+ str(fn))
 	print("Positive count: "+ str(p))
 	print("Negative count: "+ str(n))
+
+
+
+	#Writing results to file
 
 	rF = open('resultsFull.txt', 'a')
 	rF.write("Confusion Matrix for black Colour Thresholding\n")

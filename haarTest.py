@@ -179,6 +179,9 @@ def processResults(info, threshold, dirIn):
 	print("Positive count: "+ str(p))
 	print("Negative count: "+ str(n))
 
+
+
+	#Writing results to file
 	rF = open('resultsFull.txt', 'a')
 	rF.write("Confusion Matrix for Threshold value: " + str(threshold) + "\n")
 	rF.write("              Actual            \n")

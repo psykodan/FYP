@@ -8,9 +8,9 @@ import sys
 
 def main():	#User input file and output location
 
-	DIR = input("Enter path to negative images directory: ")
+	DIR = str(input("Enter path to negative images directory: ") or "demoImages/neg/")
 	assert os.path.exists(DIR), "Error: Path does not exist at: , "+str(DIR)
-	DIR2 = input("Enter path to store bg.txt: ")
+	DIR2 = str(input("Enter path to store bg.txt: ") or "demoFiles/")
 	if not os.path.exists(DIR2):
 		check = input("Create directory " + DIR2 + " ? (Y/n): ")
 		if(check == "Y" or check == "y" or check == ""):

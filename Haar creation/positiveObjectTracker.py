@@ -21,9 +21,9 @@ def mouse_pos(event,x,y,flags,param):
 
 def main():	#User input file and output location
 
-	DIR = input("Enter path to positive images directory: ")
+	DIR = str(input("Enter path to positive images directory: ") or "demoImages/pos/")
 	assert os.path.exists(DIR), "Error: Path does not exist at: , "+str(DIR)
-	DIR2 = input("Enter path to store info.dat: ")
+	DIR2 = str(input("Enter path to store info.dat: ") or "demoFiles/")
 	if not os.path.exists(DIR2):
 		check = input("Create directory " + DIR2 + " ? (Y/n): ")
 		if(check == "Y" or check == "y" or check == ""):

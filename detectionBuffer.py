@@ -5,41 +5,61 @@ import os
 
 def main():
 	
-	DIR = str(input("Enter path to video file for Haar detection: ") or "/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/positive/posCloudyChopSurfFanore3")
-	assert os.path.exists(DIR), "Error: Path does not exist at: , "+str(DIR)
+	#Stream input - live feed = ID value, video = path to video
+	DIR = str(input("Enter path to video file for casualty detection: ") or "demoVideos/demo1")
+	if(DIR.isdigit()):
+		DIR = int(DIR)
+	else:
+		assert os.path.exists(DIR), "Error: Path does not exist at: , "+str(DIR)
 
+	#Set the cascade for use to be our custom Haar cascade classifier
+	cascade = cv2.CascadeClassifier("cascade.xml")
 
-	#cascade = cv2.CascadeClassifier('/home/daniel/Documents/FYP/FYP/haar/final/cascade.xml')
-	haar = str(input("Enter path to Haar cascade classifier xml file: ") or '/home/daniel/Documents/FYP/FYP/haar/final/cascade.xml')
-	assert os.path.exists(haar), "Error: File does not exist at: , "+str(haar)
-	cascade = cv2.CascadeClassifier(haar)
-
+	
+	#Set the confidence cut off threshold for the detection method
 	threshold = float(input("Enter a threshold value of Haar cascade classification confidence: ") or 3.6)
 
-	box = float(input("Enter a value for the width of a box for memory check: ") or 40)
-	
-	advancedHaarDetection(DIR, cascade, threshold, box)
+	#Set the detection buffer size in pixels
+	box = int(input("Enter a value for the width of a box for memory check: ") or 40)
+	haarDetectionWithBuffer(DIR, cascade, threshold, box)
 
 
 
-def advancedHaarDetection(inputFile, cascade, threshold, box):
+def haarDetectionWithBuffer(inputFile, cascade, threshold, box):
 
-	#feed = "/home/daniel/Documents/FYP/FYP/data/ClearLightChopDoolin/positive/posClearLightChopDoolin2"
-	oldRects = []
+	detectionBuffer = []
 
+	#Open feed
 	feed = inputFile
 	cap = cv2.VideoCapture(feed)
 	if not cap.isOpened():
 		cap.open(device)
 
+
+	#kernel for use in morphological transformations
+	kernel = np.ones((5,5),np.uint8)
+
+	#Colour filtering upper and lower bounds
+	upper = np.array([255,50,100], dtype=np.uint8)
+	lower = np.array([0,0,0], dtype=np.uint8)
+														
+
 	if cap.isOpened():
 		while True:
 			ret, img = cap.read()
+
+			#gray stream for haar cascade classifier
 			gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-			
-			# image, reject levels level weights.
+
+			#hsv stream for colour filtering
+			hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+			#Detection function that uses our Haar cascade classifier
+			#Scale factor is a parameter specifying how much the image size is reduced at each image scale
+			#Min Neighbors is a parameter specifying how many neighbors each candidate rectangle should have to retain it
+			#Output Reject Levels allows for the confidendce weights to be outputted
 			bodies = cascade.detectMultiScale3(gray, scaleFactor=100, minNeighbors=100,outputRejectLevels = True)
-			rects = bodies[0]
+			detections = bodies[0]
 			neighbours = bodies[1]
 			weights = bodies[2]
 
@@ -47,22 +67,23 @@ def advancedHaarDetection(inputFile, cascade, threshold, box):
 			
 			for a in range(len(weights)):
 				if(weights[a][0] >= threshold):
-					if(len(oldRects)>0):
-						for(x,y,w,h) in oldRects:
-							if(rects[a][0] <= x+box and rects[a][0] >= x-box and rects[a][1] <= y+box and rects[a][1] >= y-box):
-								cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,255,255),2)
-								break
+					if(len(detectionBuffer)>0):
+						for(x,y,w,h) in detectionBuffer:
 
-						else:
-							cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,0,255),2)
+							#Check for cross over of coordinates within detection buffer size = box
+							if(detections[a][0] <= x+box and detections[a][0] >= x-box and detections[a][1] <= y+box and detections[a][1] >= y-box):
+								
+								cv2.rectangle(img,(detections[a][0],detections[a][1]),(detections[a][0]+detections[a][2],detections[a][1]+detections[a][3]),(0,255,255),2)
+
+								break
 
 
 			cv2.imshow('img',img)
 			if cv2.waitKey(1) & 0xFF == ord('q'):
 				break
 		
-			oldRects = rects
-			
+			detectionBuffer = detections
+
 
 		cap.release()
 		cv2.destroyAllWindows()
@@ -72,7 +93,9 @@ def advancedHaarDetection(inputFile, cascade, threshold, box):
 
 
 
-def advancedHaarDetectionImageStream(dirIn, cascade, threshold, box):
+def haarDetectionWithBufferImageStream(dirIn, cascade, threshold, box):
+
+	#Detection method is the same, only the output is written to file and shown visually
 
 	#Sort files in numerical order
 	dirFiles = os.listdir(dirIn)
@@ -80,7 +103,12 @@ def advancedHaarDetectionImageStream(dirIn, cascade, threshold, box):
 
 	processed = False
 	detect = False
-	oldRects = []
+	detectionBuffer = []
+
+	kernel = np.ones((5,5),np.uint8)
+	upper = np.array([255,50,100], dtype=np.uint8)
+	lower = np.array([0,0,0], dtype=np.uint8)
+
 
 	while(processed == False):
 		
@@ -88,11 +116,11 @@ def advancedHaarDetectionImageStream(dirIn, cascade, threshold, box):
 			detect = False
 			img = cv2.imread(dirIn + file)
 			gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
+			hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
 			# image, reject levels level weights.
 			bodies = cascade.detectMultiScale3(gray, scaleFactor=100, minNeighbors=100,outputRejectLevels = True)
-			rects = bodies[0]
+			detections = bodies[0]
 			neighbours = bodies[1]
 			weights = bodies[2]
 
@@ -100,33 +128,29 @@ def advancedHaarDetectionImageStream(dirIn, cascade, threshold, box):
 			
 			for a in range(len(weights)):
 				if(weights[a][0] >= threshold):
-					if(len(oldRects)>0):
-						for(x,y,w,h) in oldRects:
-							if(rects[a][0] <= x+box and rects[a][0] >= x-box and rects[a][1] <= y+box and rects[a][1] >= y-box):
-								#cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,255,255),2)
+					if(len(detectionBuffer)>0):
+						for(x,y,w,h) in detectionBuffer:
+							if(detections[a][0] <= x+box and detections[a][0] >= x-box and detections[a][1] <= y+box and detections[a][1] >= y-box):
 								detect=True
-								line = 'positive/'+file + ' ' + str(rects[a][0]) + ' ' + str(rects[a][1]) + ' ' + str(rects[a][0]+rects[a][2]) + ' ' + str(rects[a][1]+rects[a][3]) + '\n'
+								
+								#Write a successful detection to file
+								line = 'positive/'+file + ' ' + str(detections[a][0]) + ' ' + str(detections[a][1]) + ' ' + str(detections[a][0]+detections[a][2]) + ' ' + str(detections[a][1]+detections[a][3]) + '\n'
 								with open('results.txt','a') as f:
 									f.write(line)
 									f.close()
 								break
 
-						else:
-							#cv2.rectangle(img,(rects[a][0],rects[a][1]),(rects[a][0]+rects[a][2],rects[a][1]+rects[a][3]),(0,0,255),2)
-							dummy = 1
 
 
 			if(detect == False):
+				#Write the absence of a detection to file
 				line = 'positive/'+file + ' NONE\n'
 				with open('results.txt','a') as f:
 					f.write(line)
 					f.close()
 
-
-
-			#cv2.imshow('img',img)
 			
-			oldRects = rects
+			detectionBuffer = detections
 
 			if(file == dirFiles[-1]):
 				processed = True
@@ -140,4 +164,4 @@ def advancedHaarDetectionImageStream(dirIn, cascade, threshold, box):
 	cv2.destroyAllWindows()
 
 
-#main()
+main()

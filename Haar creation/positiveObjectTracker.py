@@ -61,31 +61,31 @@ def posObjectTracker(dirIn, dirOut):
 
 		#Start tracking when "s" is pressed
 		if cv2.waitKey(1) & 0xFF == ord('s'):
+			if(processed == False):
+				#Stream in directory of images
+				for file in dirFiles:
+					img = cv2.imread(dirIn + os.sep + file,cv2.IMREAD_GRAYSCALE)
+					
+					#Draw a rectangle of the window size around the mouse
+					cv2.rectangle(img,(ix-int(winX/2),iy-int(winY/2)),(ix+int(winX/2),iy+int(winY/2)),(255,0,0),5)
+					cv2.namedWindow('image')
+					cv2.setMouseCallback('image',mouse_pos)
+					cv2.imshow('image',img)
+					cv2.waitKey(speed)
 
-			#Stream in directory of images
-			for file in dirFiles:
-				img = cv2.imread(dirIn + os.sep + file,cv2.IMREAD_GRAYSCALE)
-				
-				#Draw a rectangle of the window size around the mouse
-				cv2.rectangle(img,(ix-int(winX/2),iy-int(winY/2)),(ix+int(winX/2),iy+int(winY/2)),(255,0,0),5)
-				cv2.namedWindow('image')
-				cv2.setMouseCallback('image',mouse_pos)
-				cv2.imshow('image',img)
-				cv2.waitKey(speed)
+					# Write to description file the image name, num of objects, x y of top left of window and size of window
+					writeX = ix-int(winX/2)
+					writeY = iy-int(winY/2)
+					line = loc+ os.sep +file+' 1 ' + str(writeX) + ' ' + str(writeY) + ' ' + str(winX) + ' ' + str(winY) + '\n'
+					with open(dirOut + os.sep + 'info.dat','a') as f:
+						f.write(line)
 
-				# Write to description file the image name, num of objects, x y of top left of window and size of window
-				writeX = ix-int(winX/2)
-				writeY = iy-int(winY/2)
-				line = loc+ os.sep +file+' 1 ' + str(writeX) + ' ' + str(writeY) + ' ' + str(winX) + ' ' + str(winY) + '\n'
-				with open(dirOut + os.sep + 'info.dat','a') as f:
-					f.write(line)
+					if(file == dirFiles[-1]):
+						processed = True
 
-				if(file == dirFiles[-1]):
-					processed = True
-
-				if cv2.waitKey(1) & 0xFF == ord('q'):
-					processed = True
-					break
+					if cv2.waitKey(1) & 0xFF == ord('q'):
+						processed = True
+						break
 
 
 		

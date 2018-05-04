@@ -14,7 +14,7 @@ def main():
 	holdoutSets.append("/home/daniel/Documents/FYP/FYP/data/CloudyChopSurfFanore/holdout/3/positive/")
 
 
-	haar = "/home/daniel/Documents/FYP/FYP/haar/final/cascade.xml"
+	haar = "cascade.xml"
 	cascade = cv2.CascadeClassifier(haar)
 
 	objectLocations = []
